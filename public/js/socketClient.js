@@ -75,6 +75,15 @@ socket.on('agent:registered', (data) => {
 
 socket.on('agent:loggedIn', (data) => {
     state.username = data.username;
+    
+    // Save credentials (this would normally be a token, but we are using plaintext for dev)
+    const name = document.getElementById('username')?.value;
+    const pass = document.getElementById('password')?.value;
+    if (name && pass) {
+        localStorage.setItem('chronoquest_user', name);
+        localStorage.setItem('chronoquest_pass', pass);
+    }
+    
     if (typeof switchView !== 'undefined') switchView('lobby');
 });
 

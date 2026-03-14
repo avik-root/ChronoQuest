@@ -37,6 +37,13 @@ io.on('connection', (socket) => {
     // ----- AUTH EVENTS -----
     socket.on('agent:register', async (data) => {
         try {
+            if (!data.username || !data.password) return socket.emit('error', { message: 'Invalid payload.' });
+            
+            const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passRegex.test(data.password)) {
+                return socket.emit('error', { message: 'Password must be 8+ chars and contain uppercase, lowercase, and numbers.' });
+            }
+
             const db = await dbClient.readJSON('accounts.json');
             if (db.users.find(u => u.username === data.username)) {
                 return socket.emit('error', { message: 'Username already exists. Try logging in.' });

@@ -34,6 +34,16 @@ const btnShuffle = document.getElementById('btn-shuffle');
 // Initialize app
 function init() {
     setupEventListeners();
+    
+    // Check for existing session
+    const savedName = localStorage.getItem('chronoquest_user');
+    const savedPass = localStorage.getItem('chronoquest_pass');
+    if (savedName && savedPass) {
+        // Auto-login
+        usernameInput.value = savedName;
+        passwordInput.value = savedPass;
+        socketManager.loginUser(savedName, savedPass);
+    }
 }
 
 function setupEventListeners() {
@@ -86,6 +96,22 @@ function setupEventListeners() {
         
         switchView('lobby');
     });
+
+    // Logout logic
+    const btnLogout = document.getElementById('btn-logout');
+    if (btnLogout) {
+        btnLogout.addEventListener('click', () => {
+            localStorage.removeItem('chronoquest_user');
+            localStorage.removeItem('chronoquest_pass');
+            state.username = null;
+            state.currentRoom = null;
+            state.currentMatch = null;
+            state.myTeamId = null;
+            usernameInput.value = '';
+            passwordInput.value = '';
+            switchView('login');
+        });
+    }
 }
 
 function handleLogin(e) {
@@ -100,6 +126,14 @@ function handleLogin(e) {
 function handleRegister() {
     const name = usernameInput.value.trim();
     const pass = passwordInput.value.trim();
+    
+    // Password standard validation
+    const passRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+    if (!passRegex.test(pass)) {
+        alert("Registration Failed:\nPassword must be at least 8 characters long, and contain at least one uppercase letter, one lowercase letter, and one number.");
+        return;
+    }
+    
     if (name && pass) {
         socketManager.registerUser(name, pass);
     }
