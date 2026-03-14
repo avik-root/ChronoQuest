@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChronoQuest: Team Fracture</title>
+    <link rel="icon" href="images/logo.png" type="image/png">
+    <link href="css/style.css?v=1.2" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="app">
+        <!-- Main Application Container -->
+        <header>
+            <div class="header-content">
+                <img src="images/logo.png" alt="ChronoQuest Logo" class="app-logo">
+                <h1><span class="highlight">Chrono</span>Quest <span class="subtitle">|| Team Fracture</span></h1>
+            </div>
+            <div id="ping-display" class="ping-badge">Ping: -- ms</div>
+        </header>
+
+        <main id="view-container">
+            <!-- Login View -->
+            <section id="login-view" class="view active">
+                <div class="panel">
+                    <h2>Agent Authentication</h2>
+                    <form id="login-form">
+                        <input type="text" id="username" placeholder="Agent Name" required autocomplete="off">
+                        <input type="password" id="password" placeholder="Passcode" required>
+                        <div class="auth-buttons">
+                            <button type="submit" class="btn btn-primary">Login Link</button>
+                            <button type="button" id="btn-register" class="btn btn-secondary">Register New</button>
+                        </div>
+                    </form>
+                    <p id="auth-message" class="text-danger" style="margin-top: 10px; font-size: 0.9em; text-align: center;"></p>
+                </div>
+            </section>
+
+            <!-- Lobby View -->
+            <section id="lobby-view" class="view">
+                <div class="panel">
+                    <h2>Matchmaking Lobby</h2>
+                    <div class="lobby-controls">
+                        <button id="btn-create-room" class="btn btn-primary">Create Session</button>
+                        <div class="join-code-group">
+                            <input type="text" id="join-code" placeholder="6-Char Code" maxlength="6" style="text-transform: uppercase;">
+                            <button id="btn-join-code" class="btn btn-secondary">Join</button>
+                        </div>
+                    </div>
+                    <div id="room-list" class="list-container">
+                        <!-- Rooms populate here -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- Room View -->
+            <section id="room-view" class="view">
+                <div class="panel room-panel">
+                    <div class="room-header">
+                        <h2 id="room-title">Room Name</h2>
+                        <div class="room-code-badge">CODE: <span id="room-code-display">XXXXXX</span></div>
+                    </div>
+
+                    <div id="host-controls" class="host-controls-panel" style="display:none;">
+                        <h4>Host Options</h4>
+                        <div class="settings-row">
+                            <label>Team Mode: 
+                                <select id="team-mode-select" class="input-dark">
+                                    <option value="choose">Players Choose</option>
+                                    <option value="shuffle">Random Shuffle</option>
+                                </select>
+                            </label>
+                            <button id="btn-shuffle" class="btn btn-secondary btn-sm">Shuffle Now</button>
+                        </div>
+                    </div>
+
+                    <div class="team-layout">
+                        <!-- Left Team (e.g. Team 1) -->
+                        <div class="team-box" id="team-1-box">
+                            <h3>Team Alpha</h3>
+                            <div class="member-list" id="team-1-members"></div>
+                            <button class="btn btn-secondary btn-sm" onclick="joinTeam(1)">Join Team</button>
+                        </div>
+                        
+                        <!-- Right Team (e.g. Team 2) -->
+                        <div class="team-box" id="team-2-box">
+                            <h3>Team Beta</h3>
+                            <div class="member-list" id="team-2-members"></div>
+                            <button class="btn btn-secondary btn-sm" onclick="joinTeam(2)">Join Team</button>
+                        </div>
+                    </div>
+                    
+                    <div class="room-action-bar">
+                        <button id="btn-ready" class="btn btn-primary">Toggle Ready</button>
+                        <button id="btn-start" class="btn btn-danger" style="display:none;">START MISSION</button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Game View -->
+            <section id="game-view" class="view full-view">
+                <div class="game-header">
+                    <h2>MISSION: STABILIZE TIMELINE</h2>
+                    <div class="game-status">
+                        <span id="game-timer">00:00</span>
+                    </div>
+                </div>
+                
+                <div class="game-layout">
+                    <!-- Progress Bar (Enemy Team) -->
+                    <div class="progress-container">
+                        <label>Enemy Progress</label>
+                        <div class="progress-bar enemy-bar">
+                            <div class="progress-fill" id="enemy-progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+
+                    <!-- Main Play Area -->
+                    <div class="play-area panel">
+                        <h3>Timeline Anomaly Detected!</h3>
+                        <p class="task-desc">Inject stabilization sequence to fix the fracture.</p>
+                        
+                        <div class="task-interaction">
+                            <button id="btn-fix-anomaly" class="btn btn-primary btn-large">STABILIZE (+5%)</button>
+                        </div>
+                    </div>
+
+                    <!-- Progress Bar (My Team) -->
+                    <div class="progress-container">
+                        <label>Your Team Progress</label>
+                        <div class="progress-bar friendly-bar">
+                            <div class="progress-fill" id="my-progress-fill" style="width: 0%;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Game Over Overlay -->
+                <div id="game-over-overlay" class="overlay" style="display:none;">
+                    <div class="panel text-center">
+                        <h2 id="game-over-text">MISSION COMPLETE</h2>
+                        <button id="btn-back-lobby" class="btn btn-secondary">Return to Lobby</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer>
+            <p>CRITICAL ALERT: TIMELINE UNSTABLE</p>
+            <div class="security-badge">
+                DEVELOPED AND SECURED BY "MintFire" VERSION "v1.0.0.0"
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="js/socketClient.js?v=1.2"></script>
+    <script src="js/app.js?v=1.2"></script>
+</body>
+</html>
