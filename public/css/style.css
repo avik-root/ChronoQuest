@@ -309,6 +309,25 @@ footer p {
 .kick-btn:hover { color: var(--accent); }
 .ban-btn:hover { color: var(--danger); }
 
+.status-nominal {
+    color: var(--success);
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+.status-critical {
+    color: var(--danger);
+    font-weight: bold;
+    letter-spacing: 2px;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(10px); }
     to { opacity: 1; transform: translateY(0); }

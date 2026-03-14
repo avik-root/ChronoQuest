@@ -77,6 +77,13 @@ function setupEventListeners() {
 
     btnBackLobby.addEventListener('click', () => {
         document.getElementById('game-over-overlay').style.display = 'none';
+        
+        const statusText = document.getElementById('system-status');
+        if (statusText) {
+            statusText.innerText = 'SYSTEM STATUS: TIMELINE STABLE';
+            statusText.className = 'status-nominal';
+        }
+        
         switchView('lobby');
     });
 }
@@ -217,6 +224,12 @@ const uiManager = {
         document.getElementById('enemy-progress-fill').style.width = '0%';
         document.getElementById('game-over-overlay').style.display = 'none';
 
+        const statusText = document.getElementById('system-status');
+        if (statusText) {
+            statusText.innerText = 'CRITICAL ALERT: TIMELINE UNSTABLE';
+            statusText.className = 'status-critical';
+        }
+
         switchView('game');
     },
 
@@ -238,10 +251,16 @@ const uiManager = {
     endGame: (matchData) => {
         state.currentMatch = null;
         document.getElementById('game-over-text').innerText = 
-            matchData.winner == state.myTeamId ? 'MISSION SUCCESS! TIMELINE STABILIZED!' : 'MISSION FAILED. ENEMY TEAM WON.';
+            matchData.winner == state.myTeamId ? 'MISSION SUCCESS! TIMELINE STABILIZED!' : 'MISSION FAILED. TACHYON OVERLOAD.';
         document.getElementById('game-over-text').style.color = 
             matchData.winner == state.myTeamId ? 'var(--success)' : 'var(--danger)';
         document.getElementById('game-over-overlay').style.display = 'flex';
+
+        const statusText = document.getElementById('system-status');
+        if (statusText) {
+            statusText.innerText = matchData.winner == state.myTeamId ? 'SYSTEM STATUS: TIMELINE STABILIZED' : 'CRITICAL ALERT: TIMELINE COLLAPSED';
+            statusText.className = matchData.winner == state.myTeamId ? 'status-nominal' : 'status-critical';
+        }
     }
 };
 
