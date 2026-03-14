@@ -253,9 +253,9 @@ const uiManager = {
     startGame: (matchData) => {
         state.currentMatch = matchData;
         
-        // Reset progress bars
-        document.getElementById('my-progress-fill').style.width = '0%';
-        document.getElementById('enemy-progress-fill').style.width = '0%';
+        // Reset progress bars (Vertical bars use height, not width)
+        document.getElementById('my-progress-fill').style.height = '0%';
+        document.getElementById('enemy-progress-fill').style.height = '0%';
         document.getElementById('game-over-overlay').style.display = 'none';
 
         const statusText = document.getElementById('system-status');
@@ -275,10 +275,10 @@ const uiManager = {
         const enemyTeam = matchData.teams[enemyTeamId];
 
         if (myTeam) {
-            document.getElementById('my-progress-fill').style.width = `${myTeam.progress}%`;
+            document.getElementById('my-progress-fill').style.height = `${myTeam.progress}%`;
         }
         if (enemyTeam) {
-            document.getElementById('enemy-progress-fill').style.width = `${enemyTeam.progress}%`;
+            document.getElementById('enemy-progress-fill').style.height = `${enemyTeam.progress}%`;
         }
     },
 

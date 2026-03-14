@@ -120,12 +120,23 @@ io.on('connection', (socket) => {
     });
 
     socket.on('match:start', (roomId) => {
+        console.log(`DEBUG: Received match:start from ${socket.id} for room ${roomId}`);
         const room = RoomManager.getRoom(roomId);
-        if (room && room.host === socket.id) {
-            room.status = 'in_game';
-            const match = MatchEngine.startMatch(room);
-            io.to(roomId).emit('match:started', match);
-            io.emit('lobby:rooms', RoomManager.getAllRooms());
+        if (room) {
+            console.log(`DEBUG: Room found. Room Host is ${room.host}`);
+            if (room.host === socket.id) {
+                console.log(`DEBUG: Host validated. Creating match instance...`);
+                room.status = 'in_game';
+                const match = MatchEngine.startMatch(room);
+                console.log(`DEBUG: Match object created`, match);
+                io.to(roomId).emit('match:started', match);
+                io.emit('lobby:rooms', RoomManager.getAllRooms());
+                console.log(`DEBUG: match:started emitted successfully to room ${roomId}`);
+            } else {
+                console.log(`DEBUG: Failed host validation! match:start rejected.`);
+            }
+        } else {
+            console.log(`DEBUG: Room not found for match:start`);
         }
     });
 
