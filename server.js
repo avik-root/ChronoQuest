@@ -104,7 +104,7 @@ io.on('connection', (socket) => {
     socket.on('room:ready', (data) => {
         const room = RoomManager.getRoom(data.roomId);
         if (room) {
-            const player = room.players.get(socket.id);
+            const player = room.players[socket.id];
             if (player) {
                 player.isReady = !player.isReady;
                 io.to(data.roomId).emit('room:update', room);
